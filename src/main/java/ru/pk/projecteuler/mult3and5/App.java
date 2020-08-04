@@ -1,6 +1,6 @@
 package ru.pk.projecteuler.mult3and5;
 
-public class Starter {
+public class App {
 
     public static void main(String[] args) {
         Calc c = new Calc();
