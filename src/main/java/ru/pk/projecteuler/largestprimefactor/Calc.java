@@ -1,13 +1,31 @@
 package ru.pk.projecteuler.largestprimefactor;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Optional;
+
 public class Calc {
 
     public long process(long number) {
-        long resultLargestPrimeFactor = 0;
+        long tempNumber = number;
+        LongCollection primeFactors = new LongCollection();
 
-        LongCollection collection = sieveOfEratosthenes(number);
+        for (long i = 2; i <= tempNumber; i++) {
+            LongCollection collection = findPrimeNumbers(i);
+            LongCollection.Iterator it = collection.iterator();
+            while (it.hasNext()) {
+                long testPrimeFactor = it.next();
+                if (tempNumber % testPrimeFactor == 0) {
+                    primeFactors.add(testPrimeFactor);
+                    tempNumber = tempNumber / testPrimeFactor;
+                    it.reset();
+                }
+            }
+        }
 
-        return resultLargestPrimeFactor;
+        Collection<Long> resultList = primeFactors.getCollection();
+        Optional<Long> result = resultList.stream().max(Comparator.comparingLong(Long::longValue));
+        return result.isPresent() ? result.get() : 0;
     }
 
     /**

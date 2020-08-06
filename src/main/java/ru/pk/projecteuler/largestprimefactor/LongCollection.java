@@ -1,5 +1,7 @@
 package ru.pk.projecteuler.largestprimefactor;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public class LongCollection {
@@ -29,6 +31,19 @@ public class LongCollection {
 
     public Element getLast() {
         return last;
+    }
+
+    public Collection<Long> getCollection() {
+        if (size > Integer.MAX_VALUE) {
+            throw new IndexOutOfBoundsException("Слишком много значение для выгрузки в коллекцию");
+        }
+
+        Collection<Long> result = new ArrayList<>((int)size);
+        Iterator it = iterator();
+        while (it.hasNext()) {
+            result.add(it.next());
+        }
+        return result;
     }
 
     public Iterator iterator() {
