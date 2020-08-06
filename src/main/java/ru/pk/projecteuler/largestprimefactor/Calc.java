@@ -1,26 +1,59 @@
 package ru.pk.projecteuler.largestprimefactor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-
 public class Calc {
 
     public long process(long number) {
         long resultLargestPrimeFactor = 0;
 
+        LongCollection collection = sieveOfEratosthenes(number);
 
         return resultLargestPrimeFactor;
     }
 
     /**
-     * Решето Эратосфена
-     * Sieve of Eratosthenes
+     * Поиск простых чисел до указанного максимального числа
      */
-    private void sieveOfEratosthenes(long max) {
-        List[] allNumbers = new ArrayList();
+    private LongCollection findPrimeNumbers(long max) {
+        LongCollection primeNumbers = new LongCollection();
+        LongCollection.Iterator it = primeNumbers.iterator();
 
-        Queue<Long> q = null;
+        //Для малых чисел
+        for (long i = 2; i <= max && i <= 8; i++) {
+            it.reset();
+            boolean remainder = false;
+            while (it.hasNext()) {
+                if (i % it.next() == 0) {
+                    remainder = true;
+                    break;
+                }
+            }
+            //Проверили деление, но везде остаток
+            if (!remainder) {
+                primeNumbers.add(i);
+            }
+        }
+
+        for (long i = 9; i <= max; i += 2) {
+            byte rem = (byte) (i % 10);
+            if (rem == 5) {
+                continue;
+            }
+
+            it.reset();
+            boolean remainder = false;
+            while (it.hasNext()) {
+                if (i % it.next() == 0) {
+                    remainder = true;
+                    break;
+                }
+            }
+            //Проверили деление, но везде остаток
+            if (!remainder) {
+                primeNumbers.add(i);
+            }
+        }
+
+        return primeNumbers;
     }
 
 }

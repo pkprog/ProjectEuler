@@ -1,7 +1,9 @@
 package ru.pk.projecteuler.largestprimefactor;
 
+import java.util.NoSuchElementException;
+
 public class LongCollection {
-    private long size;
+    private long size = 0;
     private Element first;
     private Element last;
 
@@ -9,10 +11,12 @@ public class LongCollection {
         Element el = new Element(value);
         if (first == null) {
             first = el;
+            last = first;
         } else {
-            first.setNext(el);
+            last.setNext(el);
         }
         last = el;
+        size++;
     }
 
     public long size() {
@@ -25,6 +29,10 @@ public class LongCollection {
 
     public Element getLast() {
         return last;
+    }
+
+    public Iterator iterator() {
+        return new Iterator(this);
     }
 
     private static class Element {
@@ -45,6 +53,49 @@ public class LongCollection {
 
         public long getValue() {
             return value;
+        }
+    }
+
+    public static class Iterator {
+        private final LongCollection collection;
+        private Element first;
+        private Element current;
+
+        public Iterator(LongCollection collection) {
+            this.collection = collection;
+            this.first = collection.getFirst();
+            this.current = null;
+        }
+
+        public boolean hasNext() {
+            if (current == null) {
+                return first != null;
+            } else {
+                return current.getNext() != null;
+            }
+        }
+
+        public long next() {
+            if (current == null) {
+                if (first == null) {
+                    throw new NoSuchElementException();
+                } else {
+                    current = first;
+                }
+            } else {
+                if (current.getNext() == null) {
+                    throw new NoSuchElementException();
+                } else {
+                    current = current.getNext();
+                }
+            }
+
+            return current.getValue();
+        }
+
+        public void reset() {
+            first = collection.getFirst();
+            current = null;
         }
     }
 }
