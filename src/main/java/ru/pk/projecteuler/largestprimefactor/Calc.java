@@ -74,4 +74,7 @@ public class Calc {
         return primeNumbers;
     }
 
+    public LongCollection processNotImportant(long max) {
+        return findPrimeNumbers(max);
+    }
 }
