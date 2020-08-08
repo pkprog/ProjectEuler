@@ -6,6 +6,7 @@ import ru.pk.projecteuler.lib.LongCollection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 public class Calc {
@@ -18,8 +19,8 @@ public class Calc {
         Collection<Long> temp = collection.getCollection();
         Collection<SplitDigits> spList = new LinkedList<>();
         for (Long l: temp) {
-            SplitDigits sp = SplitDigits.split(l, (byte) 4);
-            if (sp != null) spList.add(sp);
+            Optional<SplitDigits> spOptional = SplitDigits.split(l, (byte) 4);
+            spOptional.ifPresent(spList::add);
         }
 
         return result;
@@ -44,17 +45,24 @@ public class Calc {
          * @param numberDiigtsFilter Число цифр, которое подходит
          * @return null, если объект не создан, в противном случае - созданный объект
          */
-        public static SplitDigits split(Long number, byte numberDiigtsFilter) {
+        public static Optional<SplitDigits> split(Long number, byte numberDiigtsFilter) {
             byte[] digits = new byte[numberDiigtsFilter];
             long operatingNumber = number;
             for (byte i = 1; i <= numberDiigtsFilter; i++) {
-                if (operatingNumber == 0) return null;
+                if (operatingNumber == 0) return Optional.empty(); //Число цифр в числе меньше, чем в фильтре
                 final long TEN = 10;
                 digits[i-1] = (byte) (operatingNumber % TEN);
                 operatingNumber = operatingNumber / TEN;
             }
-            SplitDigits obj = new SplitDigits(number, digits);
-            return obj;
+            if (operatingNumber != 0) return Optional.empty();//Число цифр в числе больше, чем в фильтре
+
+            //Развернуть
+            byte[] digitsResult = new byte[digits.length];
+            for (int i = digits.length-1; i >= 0 ; i--) {
+                digitsResult[digits.length-1 - i] = digits[i];
+            }
+            SplitDigits obj = new SplitDigits(number, digitsResult);
+            return Optional.of(obj);
         }
 
         @Override

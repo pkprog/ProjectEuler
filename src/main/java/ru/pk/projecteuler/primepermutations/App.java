@@ -6,7 +6,7 @@ public class App {
         Calc c = new Calc();
 //        long[] threeNumbers = c.process();
 //        System.out.println("result=" + Arrays.toString(threeNumbers));
-        System.out.println("result test: " + c.testSplit(321, (byte) 3));
+        System.out.println("result test: " + c.testSplit(9827349794L, (byte) 10));
     }
 
 }
