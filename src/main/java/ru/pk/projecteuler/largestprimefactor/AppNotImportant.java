@@ -1,5 +1,7 @@
 package ru.pk.projecteuler.largestprimefactor;
 
+import ru.pk.projecteuler.lib.LongCollection;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

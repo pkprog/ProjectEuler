@@ -1,4 +1,4 @@
-package ru.pk.projecteuler.largestprimefactor;
+package ru.pk.projecteuler.lib;
 
 import java.util.ArrayList;
 import java.util.Collection;
