@@ -1,19 +1,24 @@
 package ru.pk.projecteuler.primepermutations;
 
+import ru.pk.projecteuler.lib.DigitsEquals;
 import ru.pk.projecteuler.lib.FindPrimeNumbers;
 import ru.pk.projecteuler.lib.LongCollection;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class Calc {
     private static final long MAX_NUMBER = 9999L;
 
-    public long process() {
-        long result = 0;
+    public long[] process() {
+        long[] result = new long[3];
 
         LongCollection collection = FindPrimeNumbers.findPrimeNumbers(MAX_NUMBER);
         Collection<Long> temp = collection.getCollection();
@@ -22,17 +27,62 @@ public class Calc {
             Optional<SplitDigits> spOptional = SplitDigits.split(l, (byte) 4);
             spOptional.ifPresent(spList::add);
         }
+        spList = filterAllDiff(spList);
+        Collection<GroupSameDigits> groupsRaw = group(spList);
+        Collection<GroupSameDigits> groupsRaw2 = groupsRaw.stream().filter(g -> g.getSpList().size() > 1).collect(Collectors.toList());
+        //По условию задачи нужно 3 числа
+        Collection<GroupSameDigits> groups = groupsRaw2.stream().filter(g -> g.getSpList().size() >= 3).collect(Collectors.toList());
 
         return result;
+    }
+
+    /**
+     * Фильтр чисел, где все цифры разные
+     */
+    private Collection<SplitDigits> filterAllDiff(Collection<SplitDigits> spList) {
+        Collection<SplitDigits> result = new LinkedList<>();
+        for (SplitDigits sp: spList) {
+            Set<Byte> set = new HashSet<>();
+            for (byte i = 0; i < sp.getDigits().length; i++) {
+                set.add(sp.getDigits()[i]);
+            }
+            if (set.size() == sp.getDigits().length) {
+                result.add(sp);
+            }
+        }
+        return result;
+    }
+
+    private Collection<GroupSameDigits> group(Collection<SplitDigits> spList) {
+        Collection<GroupSameDigits> groups = new LinkedList<>();
+        for (SplitDigits sp: spList) {
+            GroupSameDigits foundGroup = null;
+            for (GroupSameDigits gr: groups) {
+                if (gr.isMyGroup(sp)) {
+                    foundGroup = gr;
+                    break;
+                }
+            }
+            if (foundGroup != null) {
+                foundGroup.add(sp);
+            } else {
+                foundGroup = new GroupSameDigits(sp);
+                groups.add(foundGroup);
+            }
+        }
+        return groups;
     }
 
     public String testSplit(long number, byte digits) {
         return SplitDigits.split(number, digits).toString();
     }
 
+    /**
+     * Разбивка числа на цифры
+     */
     private static class SplitDigits {
-        Long number;
-        byte[] digits;
+        private Long number;
+        private byte[] digits;
 
         private SplitDigits(Long number, byte[] digits) {
             this.number = number;
@@ -72,6 +122,60 @@ public class Calc {
                     .add("digits=" + Arrays.toString(digits))
                     .toString();
         }
+
+        public Long getNumber() {
+            return number;
+        }
+
+        public byte[] getDigits() {
+            return digits;
+        }
     }
 
+    /**
+     * Группа чисел с одинаковым множеством цифр
+     */
+    private static class GroupSameDigits {
+        private byte[] digits;
+        Collection<SplitDigits> spList = new HashSet<>();
+
+        public GroupSameDigits(SplitDigits splitDigits) {
+            this.digits = splitDigits.getDigits();
+            Arrays.sort(this.digits);
+            this.spList.add(splitDigits);
+        }
+
+        /**
+         * Проверка, подходит ли эта группа данному числу
+         */
+        public boolean isMyGroup(SplitDigits sp) {
+            return DigitsEquals.equals(this.digits, sp.getDigits());
+        }
+
+        public void add(SplitDigits sp) {
+            if (!DigitsEquals.equals(this.digits, sp.getDigits())) {
+                throw new IllegalArgumentException("Попытка добавления в группу числа в другими цифрами");
+            }
+            this.spList.add(sp);
+        }
+
+        public Collection<SplitDigits> getSpList() {
+            return Collections.unmodifiableCollection(this.spList);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            GroupSameDigits that = (GroupSameDigits) o;
+
+            return DigitsEquals.equals(this.digits, that.digits);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(digits);
+        }
+    }
 }
