@@ -20,13 +20,13 @@ public class Calc {
             Optional<SplitDigits> spOptional = SplitDigits.split(l, (byte) 4);
             spOptional.ifPresent(spList::add);
         }
-        spList = filterAllDiff(spList);
+        //spList = filterAllDiff(spList);
         Collection<GroupSameDigits> groupsRaw = group(spList);
         Collection<GroupSameDigits> groupsRaw2 = groupsRaw.stream().filter(g -> g.getSpList().size() > 1).collect(Collectors.toList());
         //По условию задачи нужно 3 числа
         Collection<GroupSameDigits> groupsRaw3 = groupsRaw2.stream().filter(g -> g.getSpList().size() >= 3).collect(Collectors.toList());
         Collection<GroupSameDigitsWithSeq> seqGroups = filterGroupWithSeq(groupsRaw3, 3);
-        System.out.println("Groups found count = " + seqGroups.size());
+        System.out.println("Groups found count = " + seqGroups);
 
         return result;
     }
@@ -112,7 +112,7 @@ public class Calc {
             for (Map.Entry<Long, Integer> e: incCnt.entrySet()) {
                 final long increment = e.getKey();
                 final int count = e.getValue();
-                if (count > 0 && increment > 0) {
+                if (count > 0 && increment != 0) {
                     Collection<IncrementPairs> potentialSequenced = new HashSet<>();
                     for (int i = 0; i < arrInc.length; i++) {
                         for (int j = 0; j < arrInc[i].length; j++) {
@@ -154,7 +154,7 @@ public class Calc {
         Collection<IncrementPairs> sorted = pairs.stream()
                 .sorted(Comparator.comparingLong(p -> p.getS1().getNumber()))
                 .collect(Collectors.toList());
-        
+
         List<IncrementPairs> resultPairs = new LinkedList<>();
         IncrementPairs prevPair = null;
         int i = 1;
@@ -331,6 +331,13 @@ public class Calc {
 
         public void setSeq(long seq) {
             this.seq = seq;
+        }
+
+        @Override
+        public String toString() {
+            return new StringJoiner(", ", GroupSameDigitsWithSeq.class.getSimpleName() + "[", "]")
+                    .add("spList=" + spList)
+                    .toString();
         }
     }
 
