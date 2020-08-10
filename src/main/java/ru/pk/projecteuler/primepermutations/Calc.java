@@ -4,14 +4,7 @@ import ru.pk.projecteuler.lib.DigitsEquals;
 import ru.pk.projecteuler.lib.FindPrimeNumbers;
 import ru.pk.projecteuler.lib.LongCollection;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Calc {
@@ -31,7 +24,8 @@ public class Calc {
         Collection<GroupSameDigits> groupsRaw = group(spList);
         Collection<GroupSameDigits> groupsRaw2 = groupsRaw.stream().filter(g -> g.getSpList().size() > 1).collect(Collectors.toList());
         //По условию задачи нужно 3 числа
-        Collection<GroupSameDigits> groups = groupsRaw2.stream().filter(g -> g.getSpList().size() >= 3).collect(Collectors.toList());
+        //Collection<GroupSameDigits> groups = groupsRaw2.stream().filter(g -> g.getSpList().size() >= 3).collect(Collectors.toList());
+        Collection<GroupSameDigitsWithSeq> seqGroups = filterGroupWithSeq(groupsRaw, 3);
 
         return result;
     }
@@ -53,6 +47,9 @@ public class Calc {
         return result;
     }
 
+    /**
+     * Группировка по множеству цифр. (Сортируются перед проверкой)
+     */
     private Collection<GroupSameDigits> group(Collection<SplitDigits> spList) {
         Collection<GroupSameDigits> groups = new LinkedList<>();
         for (SplitDigits sp: spList) {
@@ -71,6 +68,114 @@ public class Calc {
             }
         }
         return groups;
+    }
+
+    /**
+     * Фильтр групп и чисел в них, где найдена последовательность
+     * @param groups Нефильтрованные группы
+     * @param targetSeq число чисел в последовательности
+     * @return Группа
+     */
+    private Collection<GroupSameDigitsWithSeq> filterGroupWithSeq(Collection<GroupSameDigits> groups, int targetSeq) {
+        Collection<GroupSameDigitsWithSeq> result = new LinkedList<>();
+        for (GroupSameDigits g: groups) {
+            List<SplitDigits> sorted = g.getSpList().stream().sorted(Comparator.comparingLong(SplitDigits::getNumber)).collect(Collectors.toList());
+
+            //Таблица пересечений-инкрементов
+            IncrementPairs[][] arrInc = new IncrementPairs[sorted.size()][sorted.size()];
+            for (int i = 0; i < arrInc.length; i++) {
+                for (int j = 0; j < arrInc[i].length; j++) {
+                    long increment = sorted.get(i).getNumber() - sorted.get(j).getNumber();
+                    arrInc[i][j] = new IncrementPairs(increment, sorted.get(i), sorted.get(j));
+                }
+            }
+            //Массив<Инкремент, Количество> - подсчет числа инкрементов
+            Map<Long, Integer> incCnt = new HashMap<>();
+            for (int i = 0; i < arrInc.length; i++) {
+                for (int j = 0; j < arrInc[i].length; j++) {
+                    if (incCnt.containsKey(arrInc[i][j].getIncrenent())) {
+                        Integer newCount = incCnt.get(arrInc[i][j].getIncrenent()) + 1;
+                        incCnt.put(arrInc[i][j].getIncrenent(), newCount);
+                    } else {
+                        incCnt.put(arrInc[i][j].getIncrenent(), 1);
+                    }
+                }
+            }
+
+            for (Map.Entry<Long, Integer> e: incCnt.entrySet()) {
+                final long increment = e.getKey();
+                final int count = e.getValue();
+                if (count > 0 && increment > 0) {
+                    Collection<IncrementPairs> potentialSequenced = new HashSet<>();
+                    for (int i = 0; i < arrInc.length; i++) {
+                        for (int j = 0; j < arrInc[i].length; j++) {
+                            if (arrInc[i][j].getIncrenent() == increment) {
+                                potentialSequenced.add(arrInc[i][j]);
+                            }
+                        }
+                    }
+                    Collection<SplitDigits> sequenced;
+                    int i = 1;
+                    do {
+                        sequenced = makeSequence(potentialSequenced, i);
+                        i++;
+                    } while (sequenced == null || (sequenced != null && sequenced.size() != targetSeq));
+
+                    //Последовательность найдена
+                    if (sequenced != null && sequenced.size() > 0) {
+                        GroupSameDigitsWithSeq resultGroup = new GroupSameDigitsWithSeq(increment, sequenced);
+                        result.add(resultGroup);
+                    }
+                }
+            }
+
+            System.out.println(incCnt);
+        }
+
+        return result;
+    }
+
+    /**
+     * Построить поселдовательность из переданных чисел. В порядке возрастания
+     * @param pairs Набор для построения
+     * @param seqNumber Номер построенной последовательности. Вдруг их несколько, вот можно получить не первую попавшуюся
+     * @return Последовательность
+     */
+    private List<SplitDigits> makeSequence(Collection<IncrementPairs> pairs, int seqNumber) {
+        Collection<IncrementPairs> sorted = pairs.stream()
+                .sorted(Comparator.comparingLong(p -> p.getS1().getNumber()))
+                .collect(Collectors.toList());
+
+
+        List<IncrementPairs> resultPairs = new LinkedList<>();
+        IncrementPairs prevPair = null;
+        int i = 1;
+        for (IncrementPairs p: sorted) {
+            if (prevPair == null) {
+                prevPair = p;
+                resultPairs.add(p);
+            } else if (prevPair.getS2().equals(p.getS1())) {
+                resultPairs.add(p);
+            } else {
+                if (resultPairs.size() > 1) { //Какая-то последовательность построена
+                    if (i == seqNumber) {
+                        List<SplitDigits> result = new LinkedList<>();
+                        result.add(resultPairs.get(0).getS1());
+                        for (IncrementPairs tempPair: resultPairs) {
+                            result.add(tempPair.getS2());
+                        }
+                        return result;
+                    } else if (i < seqNumber) {
+                        i++;
+                        resultPairs.clear();
+                        resultPairs.add(p);
+                        prevPair = p;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     public String testSplit(long number, byte digits) {
@@ -130,6 +235,21 @@ public class Calc {
         public byte[] getDigits() {
             return digits;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SplitDigits that = (SplitDigits) o;
+
+            return getNumber().equals(that.getNumber());
+        }
+
+        @Override
+        public int hashCode() {
+            return getNumber().hashCode();
+        }
     }
 
     /**
@@ -176,6 +296,52 @@ public class Calc {
         @Override
         public int hashCode() {
             return Arrays.hashCode(digits);
+        }
+    }
+
+    private static class GroupSameDigitsWithSeq extends GroupSameDigits {
+        private long seq;
+
+        public GroupSameDigitsWithSeq(long seq, Collection<SplitDigits> spList) {
+            super(spList.iterator().next());
+            Iterator<SplitDigits> it = spList.iterator();
+            it.next();
+            while (it.hasNext()) {
+                this.add(it.next());
+            }
+            this.seq = seq;
+        }
+
+        public long getSeq() {
+            return seq;
+        }
+
+        public void setSeq(long seq) {
+            this.seq = seq;
+        }
+    }
+
+    private static class IncrementPairs {
+        private long increnent;
+        private SplitDigits s1;
+        private SplitDigits s2;
+
+        public IncrementPairs(long increnent, SplitDigits s1, SplitDigits s2) {
+            this.increnent = increnent;
+            this.s1 = s1;
+            this.s2 = s2;
+        }
+
+        public long getIncrenent() {
+            return increnent;
+        }
+
+        public SplitDigits getS1() {
+            return s1;
+        }
+
+        public SplitDigits getS2() {
+            return s2;
         }
     }
 }
