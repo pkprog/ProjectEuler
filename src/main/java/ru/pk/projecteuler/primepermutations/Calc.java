@@ -24,8 +24,9 @@ public class Calc {
         Collection<GroupSameDigits> groupsRaw = group(spList);
         Collection<GroupSameDigits> groupsRaw2 = groupsRaw.stream().filter(g -> g.getSpList().size() > 1).collect(Collectors.toList());
         //По условию задачи нужно 3 числа
-        //Collection<GroupSameDigits> groups = groupsRaw2.stream().filter(g -> g.getSpList().size() >= 3).collect(Collectors.toList());
-        Collection<GroupSameDigitsWithSeq> seqGroups = filterGroupWithSeq(groupsRaw, 3);
+        Collection<GroupSameDigits> groupsRaw3 = groupsRaw2.stream().filter(g -> g.getSpList().size() >= 3).collect(Collectors.toList());
+        Collection<GroupSameDigitsWithSeq> seqGroups = filterGroupWithSeq(groupsRaw3, 3);
+        System.out.println("Groups found count = " + seqGroups.size());
 
         return result;
     }
@@ -86,13 +87,19 @@ public class Calc {
             for (int i = 0; i < arrInc.length; i++) {
                 for (int j = 0; j < arrInc[i].length; j++) {
                     long increment = sorted.get(i).getNumber() - sorted.get(j).getNumber();
-                    arrInc[i][j] = new IncrementPairs(increment, sorted.get(i), sorted.get(j));
+                    if (sorted.get(i).getNumber() <= sorted.get(j).getNumber()) {
+                        arrInc[i][j] = new IncrementPairs(increment, sorted.get(i), sorted.get(j));
+                    } else {
+                        arrInc[i][j] = new IncrementPairs(increment, sorted.get(j), sorted.get(i));
+                    }
                 }
             }
             //Массив<Инкремент, Количество> - подсчет числа инкрементов
             Map<Long, Integer> incCnt = new HashMap<>();
             for (int i = 0; i < arrInc.length; i++) {
                 for (int j = 0; j < arrInc[i].length; j++) {
+                    if (arrInc[i][j].getIncrenent() <= 0) continue;
+                    //
                     if (incCnt.containsKey(arrInc[i][j].getIncrenent())) {
                         Integer newCount = incCnt.get(arrInc[i][j].getIncrenent()) + 1;
                         incCnt.put(arrInc[i][j].getIncrenent(), newCount);
@@ -114,22 +121,24 @@ public class Calc {
                             }
                         }
                     }
-                    Collection<SplitDigits> sequenced;
-                    int i = 1;
-                    do {
-                        sequenced = makeSequence(potentialSequenced, i);
-                        i++;
-                    } while (sequenced == null || (sequenced != null && sequenced.size() != targetSeq));
+                    if (potentialSequenced.size() > 1) {
+                        Collection<SplitDigits> sequenced;
+                        int i = 1;
+                        while(true) {
+                            sequenced = makeSequence(potentialSequenced, i);
+                            if (sequenced != null && sequenced.size() == targetSeq) break;
+                            i++;
+                            if (i > potentialSequenced.size()) break;
+                        }
 
-                    //Последовательность найдена
-                    if (sequenced != null && sequenced.size() > 0) {
-                        GroupSameDigitsWithSeq resultGroup = new GroupSameDigitsWithSeq(increment, sequenced);
-                        result.add(resultGroup);
+                        //Последовательность найдена
+                        if (sequenced != null && sequenced.size() > 0) {
+                            GroupSameDigitsWithSeq resultGroup = new GroupSameDigitsWithSeq(increment, sequenced);
+                            result.add(resultGroup);
+                        }
                     }
                 }
             }
-
-            System.out.println(incCnt);
         }
 
         return result;
@@ -145,8 +154,7 @@ public class Calc {
         Collection<IncrementPairs> sorted = pairs.stream()
                 .sorted(Comparator.comparingLong(p -> p.getS1().getNumber()))
                 .collect(Collectors.toList());
-
-
+        
         List<IncrementPairs> resultPairs = new LinkedList<>();
         IncrementPairs prevPair = null;
         int i = 1;
@@ -156,16 +164,12 @@ public class Calc {
                 resultPairs.add(p);
             } else if (prevPair.getS2().equals(p.getS1())) {
                 resultPairs.add(p);
+                prevPair = p;
             } else {
                 if (resultPairs.size() > 1) { //Какая-то последовательность построена
-                    if (i == seqNumber) {
-                        List<SplitDigits> result = new LinkedList<>();
-                        result.add(resultPairs.get(0).getS1());
-                        for (IncrementPairs tempPair: resultPairs) {
-                            result.add(tempPair.getS2());
-                        }
-                        return result;
-                    } else if (i < seqNumber) {
+                    if (i >= seqNumber) {
+                        break;
+                    } else { //(i < seqNumber)
                         i++;
                         resultPairs.clear();
                         resultPairs.add(p);
@@ -173,6 +177,15 @@ public class Calc {
                     }
                 }
             }
+        }
+
+        if (i == seqNumber) {
+            List<SplitDigits> result = new LinkedList<>();
+            result.add(resultPairs.get(0).getS1());
+            for (IncrementPairs tempPair: resultPairs) {
+                result.add(tempPair.getS2());
+            }
+            return result;
         }
 
         return null;
