@@ -1,13 +1,23 @@
 package ru.pk.projecteuler.pokerhands.objects;
 
 public class Card {
-    private Rank rank; //Номер
-    private Suit suit; //Масть
+    private final Rank rank; //Номер
+    private final Suit suit; //Масть
 
     public Card(Rank rank, Suit suit) {
-        assert rank != null && suit != null;
+        if (rank == null || suit == null) {
+            throw new IllegalArgumentException("Один из параметров (rank, suit) пуст");
+        }
         this.rank = rank;
         this.suit = suit;
+    }
+
+    public Rank getRank() {
+        return rank;
+    }
+
+    public Suit getSuit() {
+        return suit;
     }
 
     @Override

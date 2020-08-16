@@ -1,5 +1,7 @@
 package ru.pk.projecteuler.pokerhands.objects;
 
+import java.util.StringJoiner;
+
 public enum Rank {
     two(2, "2", "2"),
     three(3, "3", "3"),
@@ -9,7 +11,7 @@ public enum Rank {
     seven(7, "7", "7"),
     eight(8, "8", "8"),
     nine(9, "9", "9"),
-    ten(10, "10", "10"),
+    ten(10, "T", "10"),
     jack(11, "J", "Валет"),
     queen(12, "Q", "Дама"),
     king(13, "K", "Король"),
@@ -35,5 +37,16 @@ public enum Rank {
 
     public String getDsc() {
         return dsc;
+    }
+
+    public int compare(Rank other) {
+        return Byte.compare(this.getValue(), other.getValue());
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", "Ранк" + "[", "]")
+                .add(dsc)
+                .toString();
     }
 }

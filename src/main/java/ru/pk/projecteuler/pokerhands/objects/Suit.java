@@ -29,8 +29,8 @@ public enum Suit {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Suit.class.getSimpleName() + "[", "]")
-                .add("dsc='" + dsc + "'")
+        return new StringJoiner(", ", "Масть" + "[", "]")
+                .add(dsc)
                 .toString();
     }
 }
