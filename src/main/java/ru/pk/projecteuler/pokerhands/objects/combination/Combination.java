@@ -15,7 +15,7 @@ import java.util.StringJoiner;
  */
 public abstract class Combination implements Comparable<Combination> {
     protected final Hand hand;
-    public abstract ConbinationRank combinationRank();
+    public abstract CombinationRank combinationRank();
 
     public Combination(Hand hand) {
         this.hand = hand;

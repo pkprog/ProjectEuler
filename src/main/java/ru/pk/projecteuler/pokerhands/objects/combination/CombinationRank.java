@@ -1,6 +1,6 @@
 package ru.pk.projecteuler.pokerhands.objects.combination;
 
-public enum ConbinationRank {
+public enum CombinationRank {
     high_card(0, "Highest value card", "Старшая Карта"),
     one_pair(1, "Two cards of the same value", "Пара"),
     two_pairs(2, "Two different pairs", "Две Пары"),
@@ -16,7 +16,7 @@ public enum ConbinationRank {
     private final String dsc;
     private final String dscRu;
 
-    ConbinationRank(int value, String dsc, String dscRu) {
+    CombinationRank(int value, String dsc, String dscRu) {
         this.value = (byte) value;
         this.dsc = dsc;
         this.dscRu = dscRu;

@@ -4,7 +4,7 @@ import ru.pk.projecteuler.pokerhands.objects.Card;
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.combination.Combination;
 import ru.pk.projecteuler.pokerhands.objects.combination.CompareCombinationException;
-import ru.pk.projecteuler.pokerhands.objects.combination.ConbinationRank;
+import ru.pk.projecteuler.pokerhands.objects.combination.CombinationRank;
 import ru.pk.projecteuler.pokerhands.objects.combination.SortedCardsSet;
 
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ public class HighCard extends Combination {
     }
 
     @Override
-    public ConbinationRank combinationRank() {
-        return ConbinationRank.high_card;
+    public CombinationRank combinationRank() {
+        return CombinationRank.high_card;
     }
 
     @Override
@@ -46,6 +46,6 @@ public class HighCard extends Combination {
     public SortedSet<Card> exactCards() {
         List<Card> cards = new ArrayList<>(hand.getCards());
         cards.sort(Comparator.comparing(Card::getRank).reversed());
-        return SortedCardsSet.createSorttedRank().addCard(cards.get(0));
+        return SortedCardsSet.createSortedRank().addCard(cards.get(0));
     }
 }

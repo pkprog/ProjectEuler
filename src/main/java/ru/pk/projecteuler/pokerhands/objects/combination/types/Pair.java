@@ -4,8 +4,8 @@ import ru.pk.projecteuler.pokerhands.objects.Card;
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.Rank;
 import ru.pk.projecteuler.pokerhands.objects.combination.Combination;
+import ru.pk.projecteuler.pokerhands.objects.combination.CombinationRank;
 import ru.pk.projecteuler.pokerhands.objects.combination.CompareCombinationException;
-import ru.pk.projecteuler.pokerhands.objects.combination.ConbinationRank;
 import ru.pk.projecteuler.pokerhands.objects.combination.IllegalCombinationException;
 import ru.pk.projecteuler.pokerhands.objects.combination.SortedCardsSet;
 
@@ -34,19 +34,18 @@ public class Pair extends Combination {
     private Set<Card> calc(Set<Card> cards) {
         Set<Card> prevPair = null;
         Rank prevRank = null;
-        for (Card c1: cards) {
-            for (Card c2: cards) {
-                if (c1.equals(c2)) continue;
-                if (c1.getRank().equals(c2.getRank())) {
-                    if (prevRank == null) {
-                        prevRank = c2.getRank();
-                        prevPair = new HashSet<>(Arrays.asList(c1, c2));
-                    } else {
-                        if (prevRank.getValue() < c2.getRank().getValue()) {
-                            prevRank = c2.getRank();
-                            prevPair = new HashSet<>(Arrays.asList(c1, c2));
-                        }
-                    }
+
+        for (Set<Card> pair: CardsSetUtils.getAllPairs(cards)) {
+            Card[] pairCards = pair.toArray(new Card[] {});
+            Card c1 = pairCards[0], c2 = pairCards[1];
+
+            if (prevRank == null) {
+                prevRank = c1.getRank();
+                prevPair = new HashSet<>(Arrays.asList(c1, c2));
+            } else {
+                if (prevRank.getValue() < c2.getRank().getValue()) {
+                    prevRank = c1.getRank();
+                    prevPair = new HashSet<>(Arrays.asList(c1, c2));
                 }
             }
         }
@@ -59,8 +58,8 @@ public class Pair extends Combination {
     }
 
     @Override
-    public ConbinationRank combinationRank() {
-        return ConbinationRank.one_pair;
+    public CombinationRank combinationRank() {
+        return CombinationRank.one_pair;
     }
 
     @Override
@@ -78,6 +77,6 @@ public class Pair extends Combination {
 
     @Override
     protected SortedSet<Card> exactCards() {
-        return SortedCardsSet.createSorttedSuit().addCards(this.cardsInPair);
+        return SortedCardsSet.createSortedSuit().addCards(this.cardsInPair);
     }
 }
