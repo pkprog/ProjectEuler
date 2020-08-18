@@ -33,11 +33,11 @@ public class SortedCardsSet extends TreeSet<Card> {
         return this;
     }
 
-    private static final Comparator<Card> comparatorByRank = Comparator.comparing(Card::getRank).reversed();
-    private static final Comparator<Card> comparatorBySuit = Comparator.comparing(Card::getSuit).reversed();
+    private static final Comparator<Card> comparatorByRank = Comparator.comparing(Card::getRank, Comparator.reverseOrder());
+    private static final Comparator<Card> comparatorBySuit = Comparator.comparing(Card::getSuit, Comparator.reverseOrder());
     private static final Comparator<Card> comparatorByRankThenSuit;
     static {
-        Comparator<Card> tmp1 = Comparator.comparing(Card::getRank).reversed();
-        comparatorByRankThenSuit = tmp1.thenComparing(Card::getSuit).reversed();
+        Comparator<Card> tmp1 = Comparator.comparing(Card::getRank, Comparator.reverseOrder());
+        comparatorByRankThenSuit = tmp1.thenComparing(Card::getSuit, Comparator.reverseOrder());
     }
 }

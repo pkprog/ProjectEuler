@@ -25,8 +25,8 @@ public class Pair extends Combination {
     public Pair(Hand hand) throws IllegalCombinationException {
         super(hand);
         //Вычислить пару
-        cardsInPair = Collections.unmodifiableSet(calc(hand.getCards()));
-        if (cardsInPair.size() != 2) {
+        this.cardsInPair = Collections.unmodifiableSet(calc(hand.getCards()));
+        if (this.cardsInPair.size() != 2) {
             throw new IllegalCombinationException("Комбинация не найдена", this.getClass().getSimpleName());
         }
     }
