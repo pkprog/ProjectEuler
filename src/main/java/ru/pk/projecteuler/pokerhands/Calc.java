@@ -11,7 +11,8 @@ public class Calc {
         CombinationSelector selector = new CombinationSelector();
         Combination combination1 = selector.getHighest(player1);
         Combination combination2 = selector.getHighest(player2);
-        return combination1.compareTo(combination2);
+
+        return combination1.compareToInform(combination2);
     }
 
 }
