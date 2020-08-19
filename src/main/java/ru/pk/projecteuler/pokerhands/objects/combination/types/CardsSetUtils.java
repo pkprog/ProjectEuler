@@ -1,6 +1,8 @@
 package ru.pk.projecteuler.pokerhands.objects.combination.types;
 
 import ru.pk.projecteuler.pokerhands.objects.Card;
+import ru.pk.projecteuler.pokerhands.objects.Rank;
+import ru.pk.projecteuler.pokerhands.objects.combination.SortedCardsSet;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -69,5 +71,44 @@ public class CardsSetUtils {
         }
 
         return result;
+    }
+
+    /**
+     * Проверить, что все карты составляют Стрит
+     */
+    public static boolean checkStraight(Set<Card> cards) {
+        SortedCardsSet sorted = SortedCardsSet.createSortedRank();
+        sorted.addAll(cards);
+
+        boolean isStraight = true;
+
+        Card prev = null;
+        boolean firstAce = false;
+        for (Card c: sorted) {
+            if (prev == null) {
+                if (Rank.ace.compareTo(c.getRank()) == 0) {
+                    firstAce = true;
+                }
+            } else {
+                if (c.getRank().getValue() + 1 == prev.getRank().getValue()) {
+                    //ok
+                } else {
+                    if (Rank.two.equals(prev.getRank())) {
+                        if (Rank.ace.equals(c.getRank()) && !firstAce) {
+                            //ok
+                        } else {
+                            isStraight = false;
+                            break;
+                        }
+                    } else {
+                        isStraight = false;
+                        break;
+                    }
+                }
+            }
+            prev = c;
+        }
+
+        return isStraight;
     }
 }

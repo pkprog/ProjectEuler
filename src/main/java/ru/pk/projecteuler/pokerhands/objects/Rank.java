@@ -3,6 +3,7 @@ package ru.pk.projecteuler.pokerhands.objects;
 import java.util.StringJoiner;
 
 public enum Rank {
+    one(1, "A", "Т", "Туз"),
     two(2, "2", "2", "2"),
     three(3, "3", "3", "3"),
     four(4, "4", "4", "4"),

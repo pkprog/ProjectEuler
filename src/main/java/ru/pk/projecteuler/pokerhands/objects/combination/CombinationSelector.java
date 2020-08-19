@@ -2,6 +2,7 @@ package ru.pk.projecteuler.pokerhands.objects.combination;
 
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.TwoPairs;
 
@@ -42,6 +43,11 @@ public class CombinationSelector {
         if (threeOfAKind != null) {
             result.add(threeOfAKind);
         }
+        Straight straight = CombinationFactory.createStraight(hand);
+        if (straight != null) {
+            result.add(straight);
+        }
+
 
         return result;
     }

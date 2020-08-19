@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+/**
+ * Сортировка карт от большей к меньшей (по убыванию)
+ */
 public class SortedCardsSet extends TreeSet<Card> {
     private SortedCardsSet(Comparator<Card> comparator) {
         super(comparator);

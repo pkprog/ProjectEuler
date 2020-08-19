@@ -17,7 +17,7 @@ import java.util.SortedSet;
 
 /**
  * Three of a Kind: Three cards of the same value
- * Тройка (Трипс, Сет) – три карты одного номинала
+ * Тройка (Трипс, Сет) – три карты одного номинала (Три карты одного достоинства)
  */
 public class ThreeOfAKind extends Combination {
     private final Set<Card> cardsInThree;
