@@ -3,6 +3,7 @@ package ru.pk.projecteuler.pokerhands.objects.combination;
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.HighCard;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.TwoPairs;
 
 public class CombinationFactory {
@@ -22,6 +23,14 @@ public class CombinationFactory {
     public static TwoPairs createTwoPairs(Hand hand) {
         try {
             return new TwoPairs(hand);
+        } catch (IllegalCombinationException e) {
+            return null;
+        }
+    }
+
+    public static ThreeOfAKind createThreeOfAKind(Hand hand) {
+        try {
+            return new ThreeOfAKind(hand);
         } catch (IllegalCombinationException e) {
             return null;
         }

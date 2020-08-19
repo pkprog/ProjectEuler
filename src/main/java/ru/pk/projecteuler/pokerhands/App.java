@@ -26,14 +26,14 @@ public class App {
         )));
     }
 
-    //7C 5H 8D TD KS
+    //7C 2H 8D 2D 2S
     private static Hand getHand2() {
         return new Hand(new HashSet<>(Arrays.asList(
                 new Card(Rank.seven, Suit.clubs),
-                new Card(Rank.five, Suit.hearts),
+                new Card(Rank.two, Suit.hearts),
                 new Card(Rank.eight, Suit.diamonds),
-                new Card(Rank.ten, Suit.diamonds),
-                new Card(Rank.king, Suit.spades)
+                new Card(Rank.two, Suit.diamonds),
+                new Card(Rank.two, Suit.spades)
         )));
     }
 }

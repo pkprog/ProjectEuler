@@ -2,6 +2,7 @@ package ru.pk.projecteuler.pokerhands.objects.combination;
 
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.TwoPairs;
 
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public class CombinationSelector {
         TwoPairs twoPairs = CombinationFactory.createTwoPairs(hand);
         if (twoPairs != null) {
             result.add(twoPairs);
+        }
+        ThreeOfAKind threeOfAKind = CombinationFactory.createThreeOfAKind(hand);
+        if (threeOfAKind != null) {
+            result.add(threeOfAKind);
         }
 
         return result;

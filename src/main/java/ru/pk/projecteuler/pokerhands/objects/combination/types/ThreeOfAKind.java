@@ -16,69 +16,69 @@ import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * One Pair: Two cards of the same value
- * 2 карты, у которых одинаковый ранг
+ * Three of a Kind: Three cards of the same value
+ * Тройка (Трипс, Сет) – три карты одного номинала
  */
-public class Pair extends Combination {
-    private final Set<Card> cardsInPair;
+public class ThreeOfAKind extends Combination {
+    private final Set<Card> cardsInThree;
 
-    public Pair(Hand hand) throws IllegalCombinationException {
+    public ThreeOfAKind(Hand hand) throws IllegalCombinationException {
         super(hand);
-        //Вычислить пару
-        this.cardsInPair = Collections.unmodifiableSet(calc(hand.getCards()));
-        if (this.cardsInPair.size() != 2) {
+        //Вычислить тройку
+        this.cardsInThree = Collections.unmodifiableSet(calc(hand.getCards()));
+        if (this.cardsInThree.size() != 3) {
             throw new IllegalCombinationException("Комбинация не найдена", this.getClass().getSimpleName());
         }
     }
 
     private Set<Card> calc(Set<Card> cards) {
-        Set<Card> prevPair = null;
+        Set<Card> prev = null;
         Rank prevRank = null;
 
-        for (Set<Card> pair: CardsSetUtils.getAllPairs(cards)) {
-            if (pair.size() == 0) continue;
+        for (Set<Card> th: CardsSetUtils.getAllThree(cards)) {
+            if (th.size() == 0) continue;
 
-            Card[] pairCards = pair.toArray(new Card[] {});
-            Card c1 = pairCards[0], c2 = pairCards[1];
+            Card[] threeCards = th.toArray(new Card[] {});
+            Card c1 = threeCards[0], c2 = threeCards[1], c3 = threeCards[2];
 
             if (prevRank == null) {
                 prevRank = c1.getRank();
-                prevPair = new HashSet<>(Arrays.asList(c1, c2));
+                prev = new HashSet<>(Arrays.asList(c1, c2, c3));
             } else {
                 if (prevRank.getValue() < c2.getRank().getValue()) {
                     prevRank = c1.getRank();
-                    prevPair = new HashSet<>(Arrays.asList(c1, c2));
+                    prev = new HashSet<>(Arrays.asList(c1, c2, c3));
                 }
             }
         }
 
-        return prevPair == null ? Collections.emptySet() : prevPair;
+        return prev == null ? Collections.emptySet() : prev;
     }
 
-    public Set<Card> getCardsInPair() {
-        return cardsInPair;
+    public Set<Card> getCardsInThree() {
+        return cardsInThree;
     }
 
     @Override
     public CombinationRank combinationRank() {
-        return CombinationRank.one_pair;
+        return CombinationRank.three_of_a_kind;
     }
 
     @Override
     protected int compareCardsTo(Combination o) {
-        if (o instanceof Pair) {
+        if (o instanceof ThreeOfAKind) {
         } else {
             throw new CompareCombinationException("Различаются сравниваемые комбинации", this.getClass().getSimpleName());
         }
 
-        Card c1 = this.cardsInPair.iterator().next();
-        Card c2 = ((Pair)o).getCardsInPair().iterator().next();
+        Card c1 = this.cardsInThree.iterator().next();
+        Card c2 = ((ThreeOfAKind)o).getCardsInThree().iterator().next();
 
         return c1.getRank().compare(c2.getRank());
     }
 
     @Override
     protected SortedSet<Card> exactCards() {
-        return SortedCardsSet.createSortedSuit().addCards(this.cardsInPair);
+        return SortedCardsSet.createSortedSuit().addCards(this.cardsInThree);
     }
 }
