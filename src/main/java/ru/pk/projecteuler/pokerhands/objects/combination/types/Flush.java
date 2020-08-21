@@ -40,6 +40,7 @@ public class Flush extends Combination {
         Flush that = (Flush) o;
         SortedSet<Card> sortedThis = SortedCardsSet.createSortedRank().addCards(this.getCards());
         SortedSet<Card> sortedThat = SortedCardsSet.createSortedRank().addCards(that.getCards());
+
         Iterator<Card> itThis = sortedThis.iterator();
         Iterator<Card> itThat = sortedThat.iterator();
         while (itThis.hasNext()) {
