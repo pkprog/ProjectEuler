@@ -2,6 +2,7 @@ package ru.pk.projecteuler.pokerhands.objects.combination.types;
 
 import ru.pk.projecteuler.pokerhands.objects.Card;
 import ru.pk.projecteuler.pokerhands.objects.Rank;
+import ru.pk.projecteuler.pokerhands.objects.Suit;
 import ru.pk.projecteuler.pokerhands.objects.combination.SortedCardsSet;
 
 import java.util.Arrays;
@@ -111,4 +112,28 @@ public class CardsSetUtils {
 
         return isStraight;
     }
+
+    /**
+     * Проверить, что все карты одной масти
+     * @return
+     */
+    public static boolean checkFlush(Set<Card> cards) {
+        boolean isFlush = true;
+        Suit prevSuit = null;
+        for (Card c: cards) {
+            if (prevSuit == null) {
+                prevSuit = c.getSuit();
+            } else {
+                if (prevSuit.equals(c.getSuit())) {
+                    //ok
+                } else {
+                    isFlush = false;
+                    break;
+                }
+            }
+        }
+
+        return isFlush;
+    }
+
 }

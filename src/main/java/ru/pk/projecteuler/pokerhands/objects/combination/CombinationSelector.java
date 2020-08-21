@@ -1,6 +1,7 @@
 package ru.pk.projecteuler.pokerhands.objects.combination;
 
 import ru.pk.projecteuler.pokerhands.objects.Hand;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.Flush;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
@@ -46,6 +47,10 @@ public class CombinationSelector {
         Straight straight = CombinationFactory.createStraight(hand);
         if (straight != null) {
             result.add(straight);
+        }
+        Flush flush = CombinationFactory.createFlush(hand);
+        if (flush != null) {
+            result.add(flush);
         }
 
 
