@@ -5,6 +5,7 @@ import ru.pk.projecteuler.pokerhands.objects.combination.types.Flush;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.FourOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.FullHouse;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.RoyalFlush;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.StraightFlush;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
@@ -67,8 +68,11 @@ public class CombinationSelector {
         if (straightFlush != null) {
             result.add(straightFlush);
         }
-
-
+        RoyalFlush royalFlush = CombinationFactory.createRoyalFlush(hand);
+        if (royalFlush != null) {
+            result.add(royalFlush);
+        }
+        
         return result;
     }
 }

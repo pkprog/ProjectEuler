@@ -170,7 +170,6 @@ public class CardsSetUtils {
 
     /**
      * Проверить, что все карты одной масти
-     * @return
      */
     public static boolean checkFlush(Set<Card> cards) {
         boolean isFlush = true;

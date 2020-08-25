@@ -1,15 +1,7 @@
 package ru.pk.projecteuler.pokerhands.objects.combination;
 
 import ru.pk.projecteuler.pokerhands.objects.Hand;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.Flush;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.FourOfAKind;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.FullHouse;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.HighCard;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.StraightFlush;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
-import ru.pk.projecteuler.pokerhands.objects.combination.types.TwoPairs;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.*;
 
 public class CombinationFactory {
 
@@ -81,6 +73,13 @@ public class CombinationFactory {
         }
     }
 
+    public static RoyalFlush createRoyalFlush(Hand hand) {
+        try {
+            return new RoyalFlush(hand);
+        } catch (IllegalCombinationException e) {
+            return null;
+        }
+    }
 
 
 }
