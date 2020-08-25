@@ -72,7 +72,7 @@ public class CombinationSelector {
         if (royalFlush != null) {
             result.add(royalFlush);
         }
-        
+
         return result;
     }
 }

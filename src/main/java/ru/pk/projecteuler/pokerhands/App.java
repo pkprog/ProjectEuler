@@ -4,15 +4,51 @@ import ru.pk.projecteuler.pokerhands.objects.Card;
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.Rank;
 import ru.pk.projecteuler.pokerhands.objects.Suit;
+import ru.pk.projecteuler.pokerhands.parser.ByRowParser;
+import ru.pk.projecteuler.pokerhands.parser.ParsedRow;
+import ru.pk.projecteuler.pokerhands.parser.euler.PrEulerFileParser;
+import ru.pk.projecteuler.pokerhands.parser.euler.TwoHands;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 
 public class App {
 
     public static void main(String[] args) {
         Calc c = new Calc();
-        System.out.println("result=" + c.process(getHand1(), getHand2()));
+
+        int resultCount = 0;
+
+        try {
+            ByRowParser parser = getParser();
+            while (true) {
+                Optional<ParsedRow> parsedRowOpt = parser.parseNext();
+                if (parsedRowOpt.isPresent()) {
+                    if (parsedRowOpt.get() instanceof TwoHands) {
+                        TwoHands twoHands = (TwoHands) parsedRowOpt.get();
+                        if (twoHands.getHand1() != null && twoHands.getHand2() != null) {
+                            if (c.process(twoHands.getHand1(), twoHands.getHand2()) > 0) {
+                                resultCount++;
+                            }
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("Total result of player 1 wins: " + resultCount);
+//        System.out.println("result=" + c.process(getHand1(), getHand2()));
+    }
+
+    private static ByRowParser getParser() throws FileNotFoundException {
+        final String PATH = "src\\main\\resources\\pokerhand\\p054_poker.txt";
+        return PrEulerFileParser.createParser(PATH);
     }
 
     //TC QC JC KC TC
