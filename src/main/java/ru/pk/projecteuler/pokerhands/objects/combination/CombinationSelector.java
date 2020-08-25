@@ -6,6 +6,7 @@ import ru.pk.projecteuler.pokerhands.objects.combination.types.FourOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.FullHouse;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.StraightFlush;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.TwoPairs;
 
@@ -61,6 +62,10 @@ public class CombinationSelector {
         FourOfAKind fourOfAKind = CombinationFactory.createFourOfAKind(hand);
         if (fourOfAKind != null) {
             result.add(fourOfAKind);
+        }
+        StraightFlush straightFlush = CombinationFactory.createStraightFlush(hand);
+        if (straightFlush != null) {
+            result.add(straightFlush);
         }
 
 

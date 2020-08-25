@@ -15,25 +15,25 @@ public class App {
         System.out.println("result=" + c.process(getHand1(), getHand2()));
     }
 
-    //6C 6D 6H 6S TC
+    //7C 8C 9C JC TC
     private static Hand getHand1() {
         return new Hand(new HashSet<>(Arrays.asList(
-                new Card(Rank.six, Suit.clubs),
-                new Card(Rank.six, Suit.diamonds),
-                new Card(Rank.six, Suit.hearts),
-                new Card(Rank.six, Suit.spades),
+                new Card(Rank.seven, Suit.clubs),
+                new Card(Rank.eight, Suit.clubs),
+                new Card(Rank.nine, Suit.clubs),
+                new Card(Rank.jack, Suit.clubs),
                 new Card(Rank.ten, Suit.clubs)
         )));
     }
 
-    //7C 7D 8D 8C 8H
+    //2D 3D 4D 5D AD
     private static Hand getHand2() {
         return new Hand(new HashSet<>(Arrays.asList(
-                new Card(Rank.seven, Suit.clubs),
-                new Card(Rank.seven, Suit.diamonds),
-                new Card(Rank.eight, Suit.diamonds),
-                new Card(Rank.eight, Suit.clubs),
-                new Card(Rank.eight, Suit.hearts)
+                new Card(Rank.two, Suit.diamonds),
+                new Card(Rank.three, Suit.diamonds),
+                new Card(Rank.four, Suit.diamonds),
+                new Card(Rank.five, Suit.diamonds),
+                new Card(Rank.ace, Suit.diamonds)
         )));
     }
 }

@@ -7,6 +7,7 @@ import ru.pk.projecteuler.pokerhands.objects.combination.types.FullHouse;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.HighCard;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.StraightFlush;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.ThreeOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.TwoPairs;
 
@@ -71,5 +72,15 @@ public class CombinationFactory {
             return null;
         }
     }
+
+    public static StraightFlush createStraightFlush(Hand hand) {
+        try {
+            return new StraightFlush(hand);
+        } catch (IllegalCombinationException e) {
+            return null;
+        }
+    }
+
+
 
 }

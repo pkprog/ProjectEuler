@@ -12,18 +12,21 @@ import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * Straight: All cards are consecutive values
- * Стрит – подряд, но не одной масти
+ * Straight Flush: All cards are consecutive values of same suit.
+ * Стрит-Флеш – все в масть по порядку
  */
-public class Straight extends Combination {
+public class StraightFlush extends Combination {
     private final SortedSet<Card> cardsInStraight;
 
-    public Straight(Hand hand) throws IllegalCombinationException {
+    public StraightFlush(Hand hand) throws IllegalCombinationException {
         super(hand);
-        //Проверить Стрит
         this.cardsInStraight = Collections.unmodifiableSortedSet(calc(hand.getCards()));
         if (cardsInStraight.size() == 0) {
             throw new IllegalCombinationException("Комбинация не найдена", this.getClass().getSimpleName());
+        } else {
+            if (!CardsSetUtils.checkFlush(this.cardsInStraight)) {
+                throw new IllegalCombinationException("Комбинация не найдена", this.getClass().getSimpleName());
+            }
         }
     }
 
@@ -37,17 +40,17 @@ public class Straight extends Combination {
 
     @Override
     public CombinationRank combinationRank() {
-        return CombinationRank.straight;
+        return CombinationRank.straight_flush;
     }
 
     @Override
     protected int compareCardsTo(Combination o) {
-        if (o instanceof Straight) {
+        if (o instanceof StraightFlush) {
         } else {
             throw new CompareCombinationException("Различаются сравниваемые комбинации", this.getClass().getSimpleName());
         }
 
-        Straight that = (Straight) o;
+        StraightFlush that = (StraightFlush) o;
 
         return this.cardsInStraight.first().getRank().compareTo(that.getCardsInStraight().first().getRank());
     }
