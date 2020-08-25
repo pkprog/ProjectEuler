@@ -15,14 +15,14 @@ public class App {
         System.out.println("result=" + c.process(getHand1(), getHand2()));
     }
 
-    //7C 8C 9C JC TC
+    //TC QC JC KC TC
     private static Hand getHand1() {
         return new Hand(new HashSet<>(Arrays.asList(
-                new Card(Rank.seven, Suit.clubs),
-                new Card(Rank.eight, Suit.clubs),
-                new Card(Rank.nine, Suit.clubs),
+                new Card(Rank.ten, Suit.clubs),
+                new Card(Rank.queen, Suit.clubs),
                 new Card(Rank.jack, Suit.clubs),
-                new Card(Rank.ten, Suit.clubs)
+                new Card(Rank.king, Suit.clubs),
+                new Card(Rank.ace, Suit.clubs)
         )));
     }
 

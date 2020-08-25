@@ -9,7 +9,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CardsSetUtils {
 
@@ -86,36 +88,78 @@ public class CardsSetUtils {
     }
 
     /**
-     * Проверить, что все карты составляют Стрит
+     * Проверить, что все карты составляют Стрит с тузом в качестве 1
      */
-    public static boolean checkStraight(Set<Card> cards) {
-        SortedCardsSet sorted = SortedCardsSet.createSortedRank();
-        sorted.addAll(cards);
+    public static boolean checkStraightSmallAce(Set<Card> cards) {
+        SortedCardsSet sorted = SortedCardsSet.createSortedRank().addCards(cards);
 
         boolean isStraight = true;
+        boolean smallAce = false;
+
+        //Нужно ли уменьшить туза
+        List<Card> aces = cards.stream().filter(c -> Rank.ace.equals(c.getRank())).collect(Collectors.toList());
+        if (aces.size() > 0) {
+            List<Card> kings = cards.stream().filter(c -> Rank.king.equals(c.getRank())).collect(Collectors.toList());
+            if (kings.size() > 0) { //Туз здесь большой
+                //ok
+            } else {//иначе туз маленький
+                smallAce = true;
+                sorted.remove(aces.get(0));
+                sorted.add(new Card(Rank.one, aces.get(0).getSuit()));
+            }
+        }
+
+        if (!smallAce) return false;
 
         Card prev = null;
-        boolean firstAce = false;
         for (Card c: sorted) {
             if (prev == null) {
-                if (Rank.ace.compareTo(c.getRank()) == 0) {
-                    firstAce = true;
-                }
             } else {
                 if (c.getRank().getValue() + 1 == prev.getRank().getValue()) {
                     //ok
                 } else {
-                    if (Rank.two.equals(prev.getRank())) {
-                        if (Rank.ace.equals(c.getRank()) && !firstAce) {
-                            //ok
-                        } else {
-                            isStraight = false;
-                            break;
-                        }
-                    } else {
-                        isStraight = false;
-                        break;
-                    }
+                    isStraight = false;
+                }
+            }
+            prev = c;
+        }
+
+        return isStraight;
+    }
+
+
+    /**
+     * Проверить, что все карты составляют Стрит с тузом в качестве туза
+     */
+    public static boolean checkStraightBigAce(Set<Card> cards) {
+        SortedCardsSet sorted = SortedCardsSet.createSortedRank().addCards(cards);
+
+        boolean isStraight = true;
+        boolean bigAce = true;
+
+        //Нужно ли уменьшить туза
+        List<Card> aces = cards.stream().filter(c -> Rank.ace.equals(c.getRank())).collect(Collectors.toList());
+        if (aces.size() > 0) {
+            List<Card> kings = cards.stream().filter(c -> Rank.king.equals(c.getRank())).collect(Collectors.toList());
+            if (kings.size() > 0) { //Туз здесь большой
+                //ok
+            } else {//иначе туз маленький
+                bigAce = false;
+                sorted.remove(aces.get(0));
+                sorted.add(new Card(Rank.one, aces.get(0).getSuit()));
+            }
+        }
+
+        if (!bigAce) return false;
+
+        Card prev = null;
+        for (Card c: sorted) {
+            if (prev == null) {
+            } else {
+                if (c.getRank().getValue() + 1 == prev.getRank().getValue()) {
+                    //ok
+                } else {
+                    isStraight = false;
                 }
             }
             prev = c;
