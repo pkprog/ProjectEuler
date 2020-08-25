@@ -2,6 +2,7 @@ package ru.pk.projecteuler.pokerhands.objects.combination;
 
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Flush;
+import ru.pk.projecteuler.pokerhands.objects.combination.types.FourOfAKind;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.FullHouse;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Pair;
 import ru.pk.projecteuler.pokerhands.objects.combination.types.Straight;
@@ -56,6 +57,10 @@ public class CombinationSelector {
         FullHouse fullHouse = CombinationFactory.createFullHouse(hand);
         if (fullHouse != null) {
             result.add(fullHouse);
+        }
+        FourOfAKind fourOfAKind = CombinationFactory.createFourOfAKind(hand);
+        if (fourOfAKind != null) {
+            result.add(fourOfAKind);
         }
 
 

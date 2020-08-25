@@ -44,6 +44,17 @@ public class CardsSetUtils {
      * Возвращает тройки карт с одним значением.
      */
     public static Collection<Set<Card>> getAllThree(Set<Card> cards) {
+        return getAllN(cards, 3);
+    }
+
+    /**
+     * Возвращает четвёрки карт с одним значением.
+     */
+    public static Collection<Set<Card>> getAllFour(Set<Card> cards) {
+        return getAllN(cards, 4);
+    }
+
+    public static Collection<Set<Card>> getAllN(Set<Card> cards, final int TARGET_COUNT) {
         Collection<Set<Card>> result = new LinkedList<>();
         Collection<Card> usedCards = new LinkedList<>();
 
@@ -58,8 +69,8 @@ public class CardsSetUtils {
 
                 if (c1.getRank().equals(c2.getRank())) {
                     tempThree.add(c2);
-                    if (tempThree.size() == 3) {
-                        Set<Card> three = new HashSet<>(3);
+                    if (tempThree.size() == TARGET_COUNT) {
+                        Set<Card> three = new HashSet<>(TARGET_COUNT);
                         three.addAll(tempThree);
                         result.add(three);
                         //
