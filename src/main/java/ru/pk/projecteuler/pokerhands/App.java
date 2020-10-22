@@ -6,10 +6,12 @@ import ru.pk.projecteuler.pokerhands.objects.Rank;
 import ru.pk.projecteuler.pokerhands.objects.Suit;
 import ru.pk.projecteuler.pokerhands.parser.ByRowParser;
 import ru.pk.projecteuler.pokerhands.parser.ParsedRow;
+import ru.pk.projecteuler.pokerhands.parser.euler.NoRowsException;
 import ru.pk.projecteuler.pokerhands.parser.euler.PrEulerFileParser;
 import ru.pk.projecteuler.pokerhands.parser.euler.TwoHands;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -24,21 +26,27 @@ public class App {
         try {
             ByRowParser parser = getParser();
             while (true) {
-                Optional<ParsedRow> parsedRowOpt = parser.parseNext();
-                if (parsedRowOpt.isPresent()) {
-                    if (parsedRowOpt.get() instanceof TwoHands) {
-                        TwoHands twoHands = (TwoHands) parsedRowOpt.get();
-                        if (twoHands.getHand1() != null && twoHands.getHand2() != null) {
-                            if (c.process(twoHands.getHand1(), twoHands.getHand2()) > 0) {
-                                resultCount++;
+                try {
+                    Optional<ParsedRow> parsedRowOpt = parser.parseNext();
+                    if (parsedRowOpt.isPresent()) {
+                        if (parsedRowOpt.get() instanceof TwoHands) {
+                            TwoHands twoHands = (TwoHands) parsedRowOpt.get();
+                            if (twoHands.getHand1() != null && twoHands.getHand2() != null) {
+                                if (c.process(twoHands.getHand1(), twoHands.getHand2()) > 0) {
+                                    resultCount++;
+                                }
                             }
                         }
                     }
-                } else {
+                } catch (NoRowsException e) {
+                    System.out.println("EonOfFile:" + e.getMessage());
                     break;
                 }
             }
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }
@@ -47,7 +55,7 @@ public class App {
     }
 
     private static ByRowParser getParser() throws FileNotFoundException {
-        final String PATH = "src\\main\\resources\\pokerhand\\p054_poker.txt";
+        final String PATH = "src\\main\\resources\\pokerhand\\p054_poker_test.txt";
         return PrEulerFileParser.createParser(PATH);
     }
 
