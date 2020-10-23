@@ -3,13 +3,11 @@ package ru.pk.projecteuler.pokerhands.objects.combination.types;
 import ru.pk.projecteuler.pokerhands.objects.Card;
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.combination.Combination;
-import ru.pk.projecteuler.pokerhands.objects.combination.CompareCombinationException;
 import ru.pk.projecteuler.pokerhands.objects.combination.CombinationRank;
+import ru.pk.projecteuler.pokerhands.objects.combination.CompareCombinationException;
 import ru.pk.projecteuler.pokerhands.objects.combination.SortedCardsSet;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Collection;
 import java.util.SortedSet;
 
 /**
@@ -33,19 +31,15 @@ public class HighCard extends Combination {
             throw new CompareCombinationException("Различаются сравниваемые комбинации", this.getClass().getSimpleName());
         }
 
-        List<Card> cards = new ArrayList<>(hand.getCards());
-        cards.sort(Comparator.comparing(Card::getRank).reversed());
+        Collection<Card> cards = SortedCardsSet.createSortedRank().addCards(hand.getCards());
+        Collection<Card> cards2 = SortedCardsSet.createSortedRank().addCards(o.getCards());
 
-        List<Card> cards2 = new ArrayList<>(o.getCards());
-        cards.sort(Comparator.comparing(Card::getRank).reversed());
-
-        return cards.get(0).getRank().compare(cards2.get(0).getRank());
+        return cards.iterator().next().getRank().compare(cards2.iterator().next().getRank());
     }
 
     @Override
     public SortedSet<Card> exactCards() {
-        List<Card> cards = new ArrayList<>(hand.getCards());
-        cards.sort(Comparator.comparing(Card::getRank).reversed());
-        return SortedCardsSet.createSortedRank().addCard(cards.get(0));
+        Collection<Card> cards = SortedCardsSet.createSortedRank().addCards(hand.getCards());
+        return SortedCardsSet.createSortedRank().addCard(cards.iterator().next());
     }
 }

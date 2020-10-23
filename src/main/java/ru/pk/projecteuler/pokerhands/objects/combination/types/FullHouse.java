@@ -80,18 +80,30 @@ public class FullHouse extends Combination {
         }
 
         Card c3This = this.getThree().iterator().next();
-        Card c2This = this.getTwo().iterator().next();
-        SortedCardsSet thisCards = SortedCardsSet.createSortedRank().addCard(c3This).addCard(c2This);
+        SortedCardsSet thisCards = SortedCardsSet.createSortedRank().addCard(c3This);
 
         FullHouse that = (FullHouse) o;
         Card c3That = that.getThree().iterator().next();
-        Card c2That = that.getTwo().iterator().next();
-        SortedCardsSet thatCards = SortedCardsSet.createSortedRank().addCard(c3That).addCard(c2That);
+        SortedCardsSet thatCards = SortedCardsSet.createSortedRank().addCard(c3That);
 
         Iterator<Card> itThis = thisCards.iterator();
         Iterator<Card> itThat = thatCards.iterator();
         while (itThis.hasNext()) {
-            int res = itThis.next().getRank().compareTo(itThat.next().getRank());
+            int res = itThis.next().getRank().compare(itThat.next().getRank());
+            if (res != 0) {
+                return res;
+            }
+        }
+
+        Card c2This = this.getTwo().iterator().next();
+        SortedCardsSet thisCards2 = SortedCardsSet.createSortedRank().addCard(c2This);
+        Card c2That = that.getTwo().iterator().next();
+        SortedCardsSet thatCards2 = SortedCardsSet.createSortedRank().addCard(c2That);
+
+        Iterator<Card> itThis2 = thisCards2.iterator();
+        Iterator<Card> itThat2 = thatCards2.iterator();
+        while (itThis2.hasNext()) {
+            int res = itThis2.next().getRank().compare(itThat2.next().getRank());
             if (res != 0) {
                 return res;
             }

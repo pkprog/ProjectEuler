@@ -104,7 +104,7 @@ public class TwoPairs extends Combination {
             Card[] pair2Cards = set2.toArray(new Card[] {});
             Card p1c1 = pair1Cards[0], p1c2 = pair1Cards[1];
             Card p2c1 = pair2Cards[0], p2c2 = pair2Cards[1];
-            int result = p1c1.getRank().compareTo(p2c1.getRank());
+            int result = p1c1.getRank().compare(p2c1.getRank());
             return result;
         };
         pairsSortComparator = tempComparator.reversed();

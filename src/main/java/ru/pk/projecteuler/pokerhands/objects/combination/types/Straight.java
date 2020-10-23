@@ -49,7 +49,7 @@ public class Straight extends Combination {
 
         Straight that = (Straight) o;
 
-        return this.cardsInStraight.first().getRank().compareTo(that.getCardsInStraight().first().getRank());
+        return this.cardsInStraight.first().getRank().compare(that.getCardsInStraight().first().getRank());
     }
 
     @Override

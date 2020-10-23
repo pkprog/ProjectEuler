@@ -26,7 +26,7 @@ public class CombinationSelector {
             all.sort(Combination::compareTo);
             return all.get(all.size() - 1);
         } else {
-            throw new IllegalArgumentException("Не найдена ни одна комбинация. Что странно");
+            throw new NotFoundCombinationsException("Не найдена ни одна комбинация. Что странно");
         }
     }
 

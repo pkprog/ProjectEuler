@@ -48,7 +48,7 @@ public class RoyalFlush extends Combination {
         SortedSet<Card> thatCards = SortedCardsSet.createSortedRank().addCards(that.getCards());
 
         //Кажется, тут всегда равенство, но так красивее.
-        return thisCards.first().getRank().compareTo(thatCards.first().getRank());
+        return thisCards.first().getRank().compare(thatCards.first().getRank());
     }
 
     @Override

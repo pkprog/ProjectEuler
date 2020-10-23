@@ -9,11 +9,7 @@ import ru.pk.projecteuler.pokerhands.objects.combination.CompareCombinationExcep
 import ru.pk.projecteuler.pokerhands.objects.combination.IllegalCombinationException;
 import ru.pk.projecteuler.pokerhands.objects.combination.SortedCardsSet;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * Four of a Kind: Four cards of the same value.
@@ -77,7 +73,24 @@ public class FourOfAKind extends Combination {
         Card c1 = this.cardsInFour.iterator().next();
         Card c2 = ((FourOfAKind)o).getCardsInFour().iterator().next();
 
-        return c1.getRank().compare(c2.getRank());
+        int test1 = c1.getRank().compare(c2.getRank());
+        if (test1 == 0) {
+            Collection<Card> thisCards = SortedCardsSet.createSortedRank().addCards(this.hand.getCards());
+            Collection<Card> thatCards = SortedCardsSet.createSortedRank().addCards(o.getCards());
+
+            Iterator<Card> itThis2 = thisCards.iterator();
+            Iterator<Card> itThat2 = thatCards.iterator();
+            while (itThis2.hasNext()) {
+                int res = itThis2.next().getRank().compare(itThat2.next().getRank());
+                if (res != 0) {
+                    return res;
+                }
+            }
+
+            return 0;
+        }
+
+        return test1;
     }
 
     @Override

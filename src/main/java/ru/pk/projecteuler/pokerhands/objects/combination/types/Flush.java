@@ -44,7 +44,7 @@ public class Flush extends Combination {
         Iterator<Card> itThis = sortedThis.iterator();
         Iterator<Card> itThat = sortedThat.iterator();
         while (itThis.hasNext()) {
-            int res = itThis.next().getRank().compareTo(itThat.next().getRank());
+            int res = itThis.next().getRank().compare(itThat.next().getRank());
             if (res != 0) {
                 return res;
             }

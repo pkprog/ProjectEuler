@@ -4,6 +4,7 @@ import ru.pk.projecteuler.pokerhands.objects.Card;
 import ru.pk.projecteuler.pokerhands.objects.Hand;
 import ru.pk.projecteuler.pokerhands.objects.Rank;
 import ru.pk.projecteuler.pokerhands.objects.Suit;
+import ru.pk.projecteuler.pokerhands.objects.combination.NotFoundCombinationsException;
 import ru.pk.projecteuler.pokerhands.parser.ByRowParser;
 import ru.pk.projecteuler.pokerhands.parser.ParsedRow;
 import ru.pk.projecteuler.pokerhands.parser.euler.NoRowsException;
@@ -41,6 +42,8 @@ public class App {
                 } catch (NoRowsException e) {
                     System.out.println("EonOfFile:" + e.getMessage());
                     break;
+                } catch (NotFoundCombinationsException e) {
+                    continue;
                 }
             }
         } catch (FileNotFoundException e) {
@@ -55,7 +58,7 @@ public class App {
     }
 
     private static ByRowParser getParser() throws FileNotFoundException {
-        final String PATH = "src\\main\\resources\\pokerhand\\p054_poker_test.txt";
+        final String PATH = "src\\main\\resources\\pokerhand\\p054_poker.txt";
         return PrEulerFileParser.createParser(PATH);
     }
 
