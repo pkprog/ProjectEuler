@@ -1,9 +1,12 @@
 package ru.pk.test.projecteuler.utils;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.pk.projecteuler.lib.StringUtils;
 import ru.pk.projecteuler.log.ConsoleLogger;
 
+@SpringBootTest
 public class StringUtilsTest {
 
     @Test
